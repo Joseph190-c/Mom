@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Evelyn, con amor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #fdf6ee;
+      --blush: #f2d9cc;
+      --rose: #c4856a;
+      --deep: #6b3a2a;
+      --text: #3d2216;
+      --muted: #9a7060;
+      --white: #fffaf6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      background:
+        radial-gradient(ellipse at 20% 50%, #f7e8df55 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, #f2d9cc44 0%, transparent 55%),
+        var(--cream);
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, #c4856a18 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--rose);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      line-height: 1.05;
+      color: var(--deep);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    .hero h1 span {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--rose);
+      margin: 2rem auto;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-sub {
+      font-weight: 300;
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s 1.2s forwards;
+    }
+
+    .memories {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--rose);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--deep);
+      margin-bottom: 3.5rem;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .photo-card {
+      background: var(--white);
+      border: 1px solid var(--blush);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px #c4856a22;
+    }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #f7e8df 0%, #f2d9cc 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--blush);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      position: absolute;
+      inset: 0;
+    }
+
+    .placeholder-icon {
+      width: 48px;
+      height: 48px;
+      border: 1.5px dashed var(--rose);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--rose);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .placeholder-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .photo-caption {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .caption-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--deep);
+      margin-bottom: 0.4rem;
+    }
+
+    .caption-text {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .quote-band {
+      background: var(--deep);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .quote-band blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+      color: var(--blush);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .quote-band cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: 'Jost', sans-serif;
+      font-style: normal;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+
+    .message-section {
+      padding: 6rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .message-section p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--text);
+      line-height: 1.9;
+      font-weight: 300;
+    }
+
+    .message-section p + p {
+      margin-top: 1.5rem;
+    }
+
+    .signature {
+      margin-top: 3rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--rose);
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--blush);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .photos-grid { grid-template-columns: 1fr; }
+      .hero { padding: 3rem 1.5rem; }
+      .memories { padding: 4rem 1.5rem; }
+      .message-section { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-badge">un tributo a la que me ama sin condiciones</p>
+    <h1>Para <span>Mamá</span></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">
+      Cada sonrisa, cada abrazo, cada momento tranquilo — 
+      gracias por ser el corazón de todo.
+    </p>
+    <p class="scroll-hint">desliza para explorar ↓</p>
+  </section>
+
+  <!-- MEMORIES / PHOTOS -->
+  <section class="memories">
+    <p class="section-label reveal">Nuestra historia en fotos</p>
+    <h2 class="section-title reveal">Memorias amorosas</h2>
+
+    <div class="photos-grid">
+
+      <div class="photo-card reveal">
+        <label class="photo-placeholder">
+          <img id="img-1-preview" alt="Memory 1" />
+        </label>
+        <div class="photo-caption">
+          <p class="caption-title">Un momento para recordar</p>
+          <p class="caption-text">Los momentos que he vidido junto a ti son los que siempre llevaré en el corazón. Gracias por ser el momento que siempre he querido.</p>
+        </div>
+      </div>
+
+      <!-- Photo Card 2 -->
+      <div class="photo-card reveal">
+        <label class="photo-placeholder" for="img-2" title="Click to add photo">
+          <img id="img-2-preview" alt="Memory 2" />
+        </label>
+        <div class="photo-caption">
+          <p class="caption-title">Siempre juntos</p>
+          <p class="caption-text">Tu amor es el que siempre nos ha mantenido juntos. Gracias por ser el acompañante de mi alma. </p>
+        </div>
+      </div>
+
+      <!-- Photo Card 3 -->
+      <div class="photo-card reveal">
+        <label class="photo-placeholder" for="img-3" title="Click to add photo">
+          <img id="img-3-preview" alt="Memory 3" />
+        </label>
+        <div class="photo-caption">
+          <p class="caption-title">Amor sin medida</p>
+          <p class="caption-text">Ese amor tan incondicional que me das ha sido el que me ha llevado hasta aquí. Gracias por ser el pilar más fuerte de mi vida.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUOTE BAND -->
+  <div class="quote-band reveal">
+    <blockquote>
+      "El amor de una madre es el combustible que permite a un ser humano normal hacer lo imposible."
+      <cite>— Marion C. Garretty</cite>
+    </blockquote>
+  </div>
+
+  <!-- PERSONAL MESSAGE -->
+  <section class="message-section">
+    <p class="section-label reveal">Desde el fondo de mi corazón</p>
+    <h2 class="section-title reveal">Una nota para ti, Mamá</h2>
+    <div class="reveal">
+      <p>
+        No hay palabras que puedan describir todo lo que me importas.
+        Gracias por siempre haber estado conmigo, por siempre haberme
+        amado, y por siempre haberme apoyado cuando la vida se ponía difícil.
+        Gracias por todo, y déjame decirte que te quiero mucho, a pesar que estemos pasando un momento difícil, a pesar de que
+        los dos en algún momento nos desviábamos del camino, a pesar de que la vida es más difícil que nunca, y a pesar de que 
+        nunca demostré lo suficiente que siempre te quise.
+      </p>
+      <p>
+        Gracias por todos los sacrificios que has hecho silenciosamente,
+        por todas las oraciones que has hecho por mí, por todas las veces que te me has puesto antes de ti.
+        Esta página es solo un recordatorio de lo profundo que te he amado — hoy y siempre.
+      </p>
+      <p class="signature">With all my love ♥</p>
+    </div>
+  </section>
+
+  <footer>
+    hecho con amor &nbsp;·&nbsp; solo para mi mom
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => observer.observe(r));
+
+
+    document.querySelectorAll('.file-input').forEach(input => {
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const preview = document.getElementById(this.dataset.preview);
+        const icon = document.getElementById(this.dataset.icon);
+        const label = document.getElementById(this.dataset.label);
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          icon.style.display = 'none';
+          label.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+</body>
+</html>
